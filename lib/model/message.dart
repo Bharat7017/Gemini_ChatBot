@@ -3,7 +3,7 @@ class Message {
   String chatId;
   Role role;
   StringBuffer message;
-  List<String> imagesUrrls;
+  List<String> imagesUrls;
   DateTime timeSent;
 
 // contructor
@@ -12,7 +12,7 @@ class Message {
     required this.chatId,
     required this.role,
     required this.message,
-    required this.imagesUrrls,
+    required this.imagesUrls,
     required this.timeSent,
   });
 
@@ -23,7 +23,7 @@ class Message {
       'chatId': chatId,
       'role': role.index,
       'message': message.toString(),
-      'imagesUrrls': imagesUrrls,
+      'imagesUrrls': imagesUrls,
       'timeSent': timeSent.toIso8601String(),
     };
   }
@@ -35,7 +35,7 @@ class Message {
       chatId: map['chatId'],
       role: Role.values[map['role']],
       message: StringBuffer(map['message']),
-      imagesUrrls: List<String>.from(map['imagesUrrls']),
+      imagesUrls: List<String>.from(map['imagesUrrls']),
       timeSent: DateTime.parse(map['timeSent']),
     );
   }
@@ -54,7 +54,7 @@ class Message {
       chatId: chatId ?? this.chatId,
       role: role ?? this.role,
       message: message ?? this.message,
-      imagesUrrls: imagesUrrls ?? this.imagesUrrls,
+      imagesUrls: imagesUrrls ?? this.imagesUrls,
       timeSent: timeSent ?? this.timeSent,
     );
   }

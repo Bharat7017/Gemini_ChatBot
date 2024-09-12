@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gemini_chat_bot/providers/chat_provider.dart';
+import 'package:gemini_chat_bot/widgets/bottom_chat_field.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -10,17 +11,17 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _messageController = TextEditingController();
+  // final TextEditingController _messageController = TextEditingController();
 
-  @override
-  void initSateState() {
-    super.initState();
-  }
+  // @override
+  // void initSateState() {
+  //   super.initState();
+  // }
 
-  void dispose() {
-    _messageController.dispose();
-    super.dispose();
-  }
+  // void dispose() {
+  //   _messageController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -37,35 +38,22 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: chatProvider.inChatMessages.length,
-                  itemBuilder: (context, index) {
-                    final message = chatProvider.inChatMessages[index];
-                    return ListTile(
-                      title: Text(message.message.toString()),
-                    );
-                  },
-                ),
-              ),
-
-              // input field
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _messageController,
-                      decoration: const InputDecoration(
-                        hintText: 'Type your message here',
+                child: chatProvider.inChatMessages.isEmpty
+                    ? const Center(
+                        child: Text('No messages yet'),
+                      )
+                    : ListView.builder(
+                        itemCount: chatProvider.inChatMessages.length,
+                        itemBuilder: (context, index) {
+                          final message = chatProvider.inChatMessages[index];
+                          return ListTile(
+                            title: Text(message.message.toString()),
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      // chatProvider.sendMessage();
-                    },
-                    icon: const Icon(Icons.send),
-                  )
-                ],
+              ),
+              BottomChatField(
+                chatProvider: chatProvider,
               )
             ],
           ),
