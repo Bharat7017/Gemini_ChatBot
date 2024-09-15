@@ -1,6 +1,5 @@
 import 'dart:developer'; // Import the developer package for logging
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:gemini_chat_bot/api/api_service.dart';
 import 'package:gemini_chat_bot/constants.dart';
@@ -100,8 +99,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
 // set file list
-
-  void setImageFileList(List<XFile> listValue) {
+  void setImagesFileList({required List<XFile> listValue}) {
     _imagesFileList = listValue;
     notifyListeners();
   }
@@ -168,9 +166,12 @@ class ChatProvider extends ChangeNotifier {
     // get the ImagesUrls
     List<String> imagesUrls = getImagesUrls(isTextOnly: isTextOnly);
 
+    //user message id
+    final userMessageId = const Uuid().v4();
+
 //user message
     final userMessage = Message(
-      messageId: '',
+      messageId: userMessageId,
       chatId: chatId,
       message: StringBuffer(message),
       role: Role.user,
@@ -210,12 +211,40 @@ class ChatProvider extends ChangeNotifier {
 
     // get content
     final content = await getContent(message: message, isTextOnly: isTextOnly);
+// asssistant message id
+    final modelMessageId = const Uuid().v4();
 
 // assistant message
     final assistantMessage = userMessage.copyWith(
+        messageId: modelMessageId,
         role: Role.assistant,
         message: StringBuffer(),
         timeSent: DateTime.now());
+
+// add this message to the list on inchatMessages
+    _inChatMessages.add(assistantMessage);
+    notifyListeners();
+
+// wait for string response
+    ChatSession.sendMessageStream(content).asyncMap((event) {
+      return event;
+    }).listen((event) {
+      _inChatMessages
+          .firstWhere((element) =>
+              element.messageId == assistantMessage.messageId &&
+              element.role.name == Role.assistant.name)
+          .message
+          .write(event.text);
+      notifyListeners();
+    }, onDone: () {
+      //save message to hive DB
+
+      // set loading to false
+      setLoading(value: false);
+    }).onError((erro, stackTrace) {
+      // set loading
+      setLoading(value: false);
+    });
   }
 
   Future<Content> getContent(
@@ -230,9 +259,9 @@ class ChatProvider extends ChangeNotifier {
       final imageBytes = await Future.wait(imageFutures!);
       final prompt = TextPart(message);
       final imageParts = imageBytes
-          .map((bytes) => DataPart('image/jpg', Uint8List.fromList(bytes)))
+          .map((bytes) => DataPart('image/jpeg', Uint8List.fromList(bytes)))
           .toList();
-      return Content.model([prompt, ...imageParts]);
+      return Content.multi([prompt, ...imageParts]);
     }
   }
 
