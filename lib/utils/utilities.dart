@@ -22,61 +22,27 @@ void showMyAnimatedDialog({
           child: FadeTransition(
             opacity: animation,
             child: AlertDialog(
-              title: Column(
-                children: [
-                  const Text(
-                    "Alert!!!",
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+              title: Text(
+                title,
+                textAlign: TextAlign.center,
               ),
               content: Text(
                 content,
-                style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black),
                 textAlign: TextAlign.center,
               ),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    onActionPressed(false);
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green),
-                  ),
-                ),
+                    onPressed: () {
+                      onActionPressed(false);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cancel')),
                 TextButton(
-                  onPressed: () {
-                    onActionPressed(true);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    actionText,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.red),
-                  ),
-                ),
+                    onPressed: () {
+                      onActionPressed(true);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(actionText)),
               ],
             ),
           ),

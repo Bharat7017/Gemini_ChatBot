@@ -6,7 +6,7 @@ class Message {
   List<String> imagesUrls;
   DateTime timeSent;
 
-// contructor
+  // constructor
   Message({
     required this.messageId,
     required this.chatId,
@@ -16,26 +16,26 @@ class Message {
     required this.timeSent,
   });
 
-  //toMap
+  // toMap
   Map<String, dynamic> toMap() {
     return {
       'messageId': messageId,
       'chatId': chatId,
       'role': role.index,
       'message': message.toString(),
-      'imagesUrrls': imagesUrls,
+      'imagesUrls': imagesUrls,
       'timeSent': timeSent.toIso8601String(),
     };
   }
 
-// from map
+  // from map
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
       messageId: map['messageId'],
       chatId: map['chatId'],
       role: Role.values[map['role']],
       message: StringBuffer(map['message']),
-      imagesUrls: List<String>.from(map['imagesUrrls']),
+      imagesUrls: List<String>.from(map['imagesUrls']),
       timeSent: DateTime.parse(map['timeSent']),
     );
   }
@@ -46,7 +46,7 @@ class Message {
     String? chatId,
     Role? role,
     StringBuffer? message,
-    List<String>? imagesUrrls,
+    List<String>? imagesUrls,
     DateTime? timeSent,
   }) {
     return Message(
@@ -54,7 +54,7 @@ class Message {
       chatId: chatId ?? this.chatId,
       role: role ?? this.role,
       message: message ?? this.message,
-      imagesUrls: imagesUrrls ?? this.imagesUrls,
+      imagesUrls: imagesUrls ?? this.imagesUrls,
       timeSent: timeSent ?? this.timeSent,
     );
   }
@@ -62,6 +62,7 @@ class Message {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
+
     return other is Message && other.messageId == messageId;
   }
 
